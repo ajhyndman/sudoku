@@ -1,10 +1,11 @@
+/*jslint node: true, vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 module.exports = function (config) {
     'use strict';
     config.set({
         basePath: '.',
         files: [
-            'someFile.js',
-            'someFile.spec.js'
+            'sudoku.js',
+            'sudoku.spec.js'
         ],
         reporters: ['progress', 'brackets'],
         frameworks: ['jasmine'],
@@ -12,7 +13,7 @@ module.exports = function (config) {
         runnerPort: 9100,
         colors: true,
         autoWatch: true,
-        browsers: ['Chrome', 'PhantomJS'],
+        browsers: ['PhantomJS'],
         captureTimeout: 60000,
         singleRun: false
     });
