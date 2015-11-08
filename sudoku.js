@@ -51,7 +51,7 @@ var sudoku = (function () {
             },
 
             clone: function () {
-                var newGrid,
+                var newGrid = [],
                     newPuzzle = puzzle(),
                     i;
 
@@ -60,7 +60,7 @@ var sudoku = (function () {
                     newGrid[i] = grid[i].slice(0);
                 }
 
-                newPuzzle.setGrid(newGrid);
+                newPuzzle.grid = newGrid;
 
                 return newPuzzle;
             },
@@ -391,9 +391,9 @@ var sudoku = (function () {
                     i,
                     j;
 
-                for (i = 0; i < state.length; i++) {
-                    for (j = 0; j < state[i].length; j++) {
-                        clonedState[i][j] = state[i][j].slice(0);
+                for (i = 0; i < this.state.length; i++) {
+                    for (j = 0; j < this.state[i].length; j++) {
+                        clonedState[i][j] = this.state[i][j].slice(0);
                     }
                 }
 
@@ -427,11 +427,11 @@ var sudoku = (function () {
              * Takes an input cell's coordinates, and returns the lowest value not
              * yet eliminated for that cell.
              */
-            firstPossibleValue: function (cell) {
+            firstPossibleValue: function (x, y) {
                 var i;
 
                 for (i = 1; i < 10; i++) {
-                    if (true === state[cell[0]][cell[1]][i]) {
+                    if (true === this.state[x][y][i]) {
                         return i;
                     }
                 }
@@ -451,8 +451,8 @@ var sudoku = (function () {
                     numberOfValuesRemaining;
 
                 // Check if the cell has already been solved.
-                if (state[x][y][0] !== 0) {
-                    return state[x][y];
+                if (this.state[x][y][0] !== 0) {
+                    return this.state[x][y];
                 }
 
                 // For the values 1 to 9, check if they are already used in the row,
@@ -462,14 +462,14 @@ var sudoku = (function () {
                             checkColumn(i, y) ||
                             checkRegion(i, (Math.floor(x / 3)) * 3,
                                         (Math.floor(y / 3)) * 3)) {
-                        state[x][y][i] = false;
+                        this.state[x][y][i] = false;
                     }
                 }
 
                 // Count the number of options remaining for the cell.
                 numberOfValuesRemaining = 0;
                 for (i = 1; i < 10; i++) {
-                    if (true === state[x][y][i]) {
+                    if (true === this.state[x][y][i]) {
                         numberOfValuesRemaining++;
                     }
                 }
@@ -479,11 +479,13 @@ var sudoku = (function () {
 
                     // Fill it in.
                     for (i = 1; i < 10; i++) {
-                        if (true === state[x][y][i]) {
-                            state[x][y][0] = i;
+                        if (true === this.state[x][y][i]) {
+                            this.state[x][y][0] = i;
                         }
                     }
                 }
+
+                return this.state[x][y];
             },
 
             /**
@@ -669,7 +671,7 @@ var sudoku = (function () {
                         if (0 === candidate.state[i][j][0]) {
                             activeCell = [i, j];
                             candidate.state[i][j][0] =
-                                    candidate.firstPossibleValue(activeCell);
+                                    candidate.firstPossibleValue(i, j);
 
                             // Record the guess being made, and record the cell being guessed in.
                             pencilworkStack.push(candidate.clone());
