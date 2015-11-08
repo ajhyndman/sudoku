@@ -51,7 +51,7 @@ var sudoku = (function () {
             },
 
             clone: function () {
-                var newGrid,
+                var newGrid = [],
                     newPuzzle = puzzle(),
                     i;
 
@@ -60,7 +60,7 @@ var sudoku = (function () {
                     newGrid[i] = grid[i].slice(0);
                 }
 
-                newPuzzle.setGrid(newGrid);
+                newPuzzle.grid = newGrid;
 
                 return newPuzzle;
             },
