@@ -1,10 +1,11 @@
+/*jslint node: true */
 module.exports = function (config) {
     'use strict';
     config.set({
         basePath: '.',
         files: [
-            'someFile.js',
-            'someFile.spec.js'
+            'sudoku.js',
+            'sudoku.spec.js'
         ],
         reporters: ['progress', 'brackets'],
         frameworks: ['jasmine'],
