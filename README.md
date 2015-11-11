@@ -1,7 +1,7 @@
 # sudoku
 Sudoku-solving app written in javascript.
 
-Updates:
+##Updates:
 
 8-11-15:
 * Wrapped the application as an npm package
