@@ -1,9 +1,7 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
+/*jslint devel: true, maxerr: 50 */
 
 var sudoku = (function () {
-
     'use strict';
-
 
 
 
@@ -16,7 +14,7 @@ var sudoku = (function () {
     var puzzle = function (array) {
 
         // #puzzle: PRIVATE
-        var grid;
+        var grid, z;
 
         if (array) {
             grid = array;
@@ -56,9 +54,9 @@ var sudoku = (function () {
                     i;
 
                 // copy each row
-                for (i = 0; i < grid.length; i++) {
-                    newGrid[i] = grid[i].slice(0);
-                }
+                newGrid = grid.map(function (row) {
+                    return row.slice(0);
+                });
 
                 newPuzzle.grid = newGrid;
 
@@ -66,17 +64,15 @@ var sudoku = (function () {
             },
 
             equals: function (otherPuzzle) {
-                var otherGrid = otherPuzzle.grid,
-                    i,
-                    j;
+                var otherGrid = otherPuzzle.grid;
 
-                for (i = 0; i < grid.length; i++) {
-                    for (j = 0; j < grid[i].length; j++) {
-                        if (grid[i][j] !== otherGrid[i][j]) {
+                grid.forEach(function (row, i) {
+                    row.forEach(function (cell, j) {
+                        if (cell !== otherGrid[i][j]) {
                             return false;
                         }
-                    }
-                }
+                    });
+                });
 
                 return true;
             }
@@ -216,7 +212,7 @@ var sudoku = (function () {
         var checkRow = function (value, row) {
             var i;
 
-            for (i = 0; i < 9; i++) {
+            for (i = 0; i < 9; i += 1) {
                 if (value === state[row][i][0]) {
                     return true;
                 }
@@ -237,7 +233,7 @@ var sudoku = (function () {
         var checkColumn = function (value, column) {
             var i;
 
-            for (i = 0; i < 9; i++) {
+            for (i = 0; i < 9; i += 1) {
                 if (value === state[i][column][0]) {
                     return true;
                 }
@@ -260,8 +256,8 @@ var sudoku = (function () {
             var i,
                 j;
 
-            for (i = regionX; i < regionX + 3; i++) {
-                for (j = regionY; j < regionY + 3; j++) {
+            for (i = regionX; i < regionX + 3; i += 1) {
+                for (j = regionY; j < regionY + 3; j += 1) {
                     if (value === state[i][j][0]) {
                         return true;
                     }
@@ -286,7 +282,7 @@ var sudoku = (function () {
         var rowContradiction = function (value, row) {
             var i;
 
-            for (i = 0; i < 9; i++) {
+            for (i = 0; i < 9; i += 1) {
                 if (true === state[row][i][value]) {
                     return false;
                 }
@@ -308,7 +304,7 @@ var sudoku = (function () {
         var columnContradiction = function (value, column) {
             var i;
 
-            for (i = 0; i < 9; i++) {
+            for (i = 0; i < 9; i += 1) {
                 if (true === state[i][column][value]) {
                     return false;
                 }
@@ -332,8 +328,8 @@ var sudoku = (function () {
             var i,
                 j;
 
-            for (i = regionX; i < regionX + 3; i++) {
-                for (j = regionY; j < regionY + 3; j++) {
+            for (i = regionX; i < regionX + 3; i += 1) {
+                for (j = regionY; j < regionY + 3; j += 1) {
                     if (true === state[i][j][value]) {
                         return false;
                     }
@@ -356,9 +352,9 @@ var sudoku = (function () {
                     j,
                     k;
 
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
-                        for (k = 0; k < 10; k++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
+                        for (k = 0; k < 10; k += 1) {
                             if (otherState[i][j][k] !== state[i][j][k]) {
                                 return false;
                             }
@@ -391,8 +387,8 @@ var sudoku = (function () {
                     i,
                     j;
 
-                for (i = 0; i < this.state.length; i++) {
-                    for (j = 0; j < this.state[i].length; j++) {
+                for (i = 0; i < this.state.length; i += 1) {
+                    for (j = 0; j < this.state[i].length; j += 1) {
                         clonedState[i][j] = this.state[i][j].slice(0);
                     }
                 }
@@ -411,12 +407,12 @@ var sudoku = (function () {
                     j,
                     k;
 
-                for (i = 0; i < newPuzzleGrid.length; i++) {
-                    for (j = 0; j < newPuzzleGrid[i].length; j++) {
+                for (i = 0; i < newPuzzleGrid.length; i += 1) {
+                    for (j = 0; j < newPuzzleGrid[i].length; j += 1) {
                         state[i][j][0] = newPuzzleGrid[i][j];
 
                         // Reset the
-                        for (k = 1; k < state[i][j].length; k++) {
+                        for (k = 1; k < state[i][j].length; k += 1) {
                             state[i][j][k] = true;
                         }
                     }
@@ -430,7 +426,7 @@ var sudoku = (function () {
             firstPossibleValue: function (x, y) {
                 var i;
 
-                for (i = 1; i < 10; i++) {
+                for (i = 1; i < 10; i += 1) {
                     if (true === this.state[x][y][i]) {
                         return i;
                     }
@@ -457,7 +453,7 @@ var sudoku = (function () {
 
                 // For the values 1 to 9, check if they are already used in the row,
                 // column or square.
-                for (i = 1; i < 10; i++) {
+                for (i = 1; i < 10; i += 1) {
                     if (checkRow(i, x) ||
                             checkColumn(i, y) ||
                             checkRegion(i, (Math.floor(x / 3)) * 3,
@@ -468,9 +464,9 @@ var sudoku = (function () {
 
                 // Count the number of options remaining for the cell.
                 numberOfValuesRemaining = 0;
-                for (i = 1; i < 10; i++) {
+                for (i = 1; i < 10; i += 1) {
                     if (true === this.state[x][y][i]) {
-                        numberOfValuesRemaining++;
+                        numberOfValuesRemaining += 1;
                     }
                 }
 
@@ -478,7 +474,7 @@ var sudoku = (function () {
                 if (1 === numberOfValuesRemaining) {
 
                     // Fill it in.
-                    for (i = 1; i < 10; i++) {
+                    for (i = 1; i < 10; i += 1) {
                         if (true === this.state[x][y][i]) {
                             this.state[x][y][0] = i;
                         }
@@ -502,8 +498,8 @@ var sudoku = (function () {
                     hasPossibleValue;
 
                 //Check rows.
-                for (i = 0; i < 9; i++) {
-                    for (k = 1; k < 10; k++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (k = 1; k < 10; k += 1) {
                         if (rowContradiction(k, i)) {
                             return false;
                         }
@@ -511,8 +507,8 @@ var sudoku = (function () {
                 }
 
                 //Check Columns.
-                for (j = 0; j < 9; j++) {
-                    for (k = 1; k < 10; k++) {
+                for (j = 0; j < 9; j += 1) {
+                    for (k = 1; k < 10; k += 1) {
                         if (columnContradiction(k, j)) {
                             return false;
                         }
@@ -520,9 +516,9 @@ var sudoku = (function () {
                 }
 
                 //Check Boxes.
-                for (i = 0; i < 3; i++) {
-                    for (j = 0; j < 3; j++) {
-                        for (k = 1; k < 10; k++) {
+                for (i = 0; i < 3; i += 1) {
+                    for (j = 0; j < 3; j += 1) {
+                        for (k = 1; k < 10; k += 1) {
                             if (regionContradiction(k, i * 3, j * 3)) {
                                 return false;
                             }
@@ -530,10 +526,10 @@ var sudoku = (function () {
                     }
                 }
 
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
                         hasPossibleValue = false;
-                        for (k = 0; k < 9; k++) {
+                        for (k = 0; k < 9; k += 1) {
                             if (false !== state[i][j][k]) {
                                 hasPossibleValue = true;
                             }
@@ -559,8 +555,8 @@ var sudoku = (function () {
                 var i,
                     j;
 
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
                         if (0 === state[i][j][0]) {
                             return false;
                         }
@@ -636,8 +632,8 @@ var sudoku = (function () {
                 // Iterate across the first layer of the puzzle array updating each
                 // cell's remaining options.  Fill it in if the cell is reduced to
                 // a single option.
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
                         candidate.updateCell(i, j);
                     }
                 }
@@ -666,8 +662,8 @@ var sudoku = (function () {
 
             // Find the next guess.
             if (null === cell) {
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
                         if (0 === candidate.state[i][j][0]) {
                             activeCell = [i, j];
                             candidate.state[i][j][0] =
@@ -759,8 +755,8 @@ var sudoku = (function () {
 
                 puzzleState = recursiveSearch(puzzleState);
 
-                for (i = 0; i < 9; i++) {
-                    for (j = 0; j < 9; j++) {
+                for (i = 0; i < 9; i += 1) {
+                    for (j = 0; j < 9; j += 1) {
                         solutionArray[i][j] = puzzleState.state[i][j][0];
                     }
                 }
